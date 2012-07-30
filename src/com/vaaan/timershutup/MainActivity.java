@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -39,6 +43,24 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+        // add mute button click event
+        Button btnMute = (Button)findViewById(R.id.btnMute);
+        btnMute.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+		    	AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+				mAudioManager.setStreamMute(AudioManager.STREAM_RING,true);
+			}
+		});
+        // add unmute button click event
+        Button btnUnMute = (Button)findViewById(R.id.btnUnMute);
+        btnUnMute.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+		    	AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+				mAudioManager.setStreamMute(AudioManager.STREAM_RING,false);
+			}
+		});
         // add click event
         Button btnAdd = (Button)findViewById(R.id.btnAdd);
         onAddConfigItemButtonClickListener=new OnAddConfigItemButtonClickListener(this);
