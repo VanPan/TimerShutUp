@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:paddingBottom="4dip" 
+        android:paddingLeft="12dip"
+        android:paddingRight="12dip">
+
+    <EditText
+        android:id="@+id/listItemEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="6"
+        android:inputType="time" >
+
+        <requestFocus />
+    </EditText>
+    <Spinner
+        android:id="@+id/listItemSp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/listItemEt" 
+        android:entries="@+array/muteTypes" />
+	<Button
+        android:id="@+id/listItemBtnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/listItemSp"
+        android:text="删除" />
+    
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">定时静音</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">定时静音</string>
+	<string-array name="muteTypes">
+		<item>静音</item>
+		<item>有声</item>
+	</string-array>
+</resources>
