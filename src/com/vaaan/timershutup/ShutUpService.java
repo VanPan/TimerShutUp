@@ -1,15 +1,12 @@
 package com.vaaan.timershutup;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.os.IBinder;
 
 import com.vaaan.timershutup.entity.MuteConfigItem;
@@ -23,7 +20,6 @@ public class ShutUpService extends Service {
 		return null;
 	}
 
-	private static SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
 	private static List<Thread> timeIntervalThreadList=new ArrayList<Thread>();
  
     @Override
@@ -33,18 +29,21 @@ public class ShutUpService extends Service {
     		stopAllThread();
     		return;
     	}
-    	AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     	// start all thread
     	for(int i=0;i< settings.getInt("count", 0);i++){
     		MuteConfigItem mci=new MuteConfigItem();
     		try {
-				mci.setFireTime(sdf.parse(settings.getString(String.format("time%s", i), "")));
+				Calendar calendar=Calendar.getInstance();
+				String[] values=settings.getString(String.format("time%s", i), "").split(":");
+				calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(values[0]));
+				calendar.set(Calendar.MINUTE, Integer.parseInt(values[1]));
+				mci.setFireTime(calendar.getTime());
 				mci.setMute(settings.getBoolean(String.format("is%smute", i), false));
-			} catch (ParseException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				continue;
 			}
-    		Thread thread=new Thread(new TimeIntervalShutuper(mci,mAudioManager));
+    		Thread thread=new Thread(new TimeIntervalShutuper(mci,this));
     		timeIntervalThreadList.add(thread);
     		thread.start();
     	}

@@ -3,6 +3,8 @@ package com.vaaan.timershutup.service;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Service;
+import android.content.Context;
 import android.media.AudioManager;
 
 import com.vaaan.timershutup.entity.MuteConfigItem;
@@ -11,11 +13,11 @@ public class TimeIntervalShutuper implements Runnable {
 
 	private MuteConfigItem mci;
 	private Calendar standarCalendar;
-	private AudioManager mAudioManager;
+	private Service service;
 
-	public TimeIntervalShutuper(MuteConfigItem mci, AudioManager mAudioManager) {
+	public TimeIntervalShutuper(MuteConfigItem mci, Service service) {
 		this.mci = mci;
-		this.mAudioManager = mAudioManager;
+		this.service=service;
 		standarCalendar = Calendar.getInstance();
 		standarCalendar.setTime(mci.getFireTime());
 	}
@@ -27,6 +29,7 @@ public class TimeIntervalShutuper implements Runnable {
 		while (true) {
 			try {
 				Thread.sleep(getSleepTime());
+		    	AudioManager mAudioManager = (AudioManager) service.getSystemService(Context.AUDIO_SERVICE);
 				mAudioManager.setStreamMute(AudioManager.STREAM_RING,
 						mci.isMute());
 			} catch (InterruptedException e) {

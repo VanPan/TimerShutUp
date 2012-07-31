@@ -1,7 +1,7 @@
 package com.vaaan.timershutup.adapter;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,11 +13,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.vaaan.timershutup.MainActivity;
 import com.vaaan.timershutup.R;
+import com.vaaan.timershutup.control.ExtendedEditText;
 import com.vaaan.timershutup.entity.MuteConfigItem;
 
 public class MuteConfigItemListAdapter extends BaseAdapter {
@@ -49,7 +49,7 @@ public class MuteConfigItemListAdapter extends BaseAdapter {
 	}
 	
 	private final class ListItemView{
-		public EditText etTime;
+		public ExtendedEditText etTime;
 		public Spinner spType;
 		public Button btnDelete;
 	}
@@ -77,8 +77,12 @@ public class MuteConfigItemListAdapter extends BaseAdapter {
 		@Override
 		public void afterTextChanged(Editable s) {
 			try {
-				mci.setFireTime(sdf.parse(s.toString()));
-			} catch (ParseException e) {
+				Calendar calendar=Calendar.getInstance();
+				String[] values=s.toString().split(":");
+				calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(values[0]));
+				calendar.set(Calendar.MINUTE, Integer.parseInt(values[1]));
+				mci.setFireTime(calendar.getTime());
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -137,7 +141,7 @@ public class MuteConfigItemListAdapter extends BaseAdapter {
             //获取list_item布局文件的视图   
             convertView = listContainer.inflate(R.layout.list_item, null);   
             //获取控件对象   
-            listItemView.etTime = (EditText)convertView.findViewById(R.id.listItemEt);   
+            listItemView.etTime = (ExtendedEditText)convertView.findViewById(R.id.listItemEt);   
             listItemView.spType = (Spinner)convertView.findViewById(R.id.listItemSp);   
             listItemView.btnDelete = (Button)convertView.findViewById(R.id.listItemBtnDelete);   
             //设置控件集到convertView   
@@ -146,9 +150,10 @@ public class MuteConfigItemListAdapter extends BaseAdapter {
             listItemView = (ListItemView)convertView.getTag();   
         }  
         MuteConfigItem mci=mainActivity.getConfigList().get(position);
+        listItemView.etTime.clearTextChangedListeners();
+        listItemView.etTime.addTextChangedListener(new ETextWatcher(mci));
         listItemView.etTime.setText(sdf.format(mci.getFireTime()));
         listItemView.spType.setSelection(mci.isMute()?0:1);
-        listItemView.etTime.addTextChangedListener(new ETextWatcher(mci));
         listItemView.spType.setOnItemSelectedListener(new MuteTypeSpinnerItenSelectedListener(mci));
         listItemView.btnDelete.setOnClickListener(new DeleteButtonClickListener(mci, mainActivity));
         return convertView;   

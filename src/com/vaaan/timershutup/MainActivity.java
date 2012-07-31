@@ -1,8 +1,7 @@
 package com.vaaan.timershutup;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
@@ -37,7 +36,6 @@ public class MainActivity extends Activity {
 	private OnAddConfigItemButtonClickListener onAddConfigItemButtonClickListener;
 	private OnSaveButtonClickListener onSaveButtonClickListener;
 	private MuteConfigItemListAdapter muteConfigItemListAdapter;
-	private static SimpleDateFormat sdf=new SimpleDateFormat("HH:mm");
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,10 +77,14 @@ public class MainActivity extends Activity {
     	for(int i=0;i< settings.getInt("count", 0);i++){
     		MuteConfigItem mci=new MuteConfigItem();
     		try {
-				mci.setFireTime(sdf.parse(settings.getString(String.format("time%s", i), "")));
+				Calendar calendar=Calendar.getInstance();
+				String[] values=settings.getString(String.format("time%s", i), "").split(":");
+				calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(values[0]));
+				calendar.set(Calendar.MINUTE, Integer.parseInt(values[1]));
+				mci.setFireTime(calendar.getTime());
 				mci.setMute(settings.getBoolean(String.format("is%smute", i), false));
 				configList.add(mci);
-			} catch (ParseException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				continue;
 			}
