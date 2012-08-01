@@ -7,12 +7,17 @@ import java.util.List;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 
 import com.vaaan.timershutup.entity.MuteConfigItem;
 import com.vaaan.timershutup.service.TimeIntervalShutuper;
 
 public class ShutUpService extends Service {
+
+	private static List<Thread> timeIntervalThreadList=new ArrayList<Thread>();
+	public Handler handler; 
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -20,13 +25,16 @@ public class ShutUpService extends Service {
 		return null;
 	}
 
-	private static List<Thread> timeIntervalThreadList=new ArrayList<Thread>();
+	@Override
+	public void onCreate(){
+		handler = new Handler(Looper.getMainLooper());       
+	}
  
     @Override
     public void onStart(Intent intent, int startId) {
+		stopAllThread();
     	SharedPreferences settings = this.getSharedPreferences("TIMER_SHUTUP", 0);
     	if(settings==null) {
-    		stopAllThread();
     		return;
     	}
     	// start all thread
@@ -58,8 +66,8 @@ public class ShutUpService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         stopAllThread();
+        super.onDestroy();
     }
 
 }
