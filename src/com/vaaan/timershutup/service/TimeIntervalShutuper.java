@@ -7,6 +7,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.widget.Toast;
 
+import com.vaaan.timershutup.GlobalAudioManager;
 import com.vaaan.timershutup.ShutUpService;
 import com.vaaan.timershutup.entity.MuteConfigItem;
 
@@ -30,22 +31,24 @@ public class TimeIntervalShutuper implements Runnable {
 		while (true) {
 			try {
 				Thread.sleep(getSleepTime());
-		    	AudioManager mAudioManager = (AudioManager) service.getSystemService(Context.AUDIO_SERVICE);
-				mAudioManager.setStreamMute(AudioManager.STREAM_RING, mci.isMute());
-		    	if(mci.isMute())
+		    	if(mci.isMute()){
+					GlobalAudioManager.mute(service);
 		    		service.handler.post(new Runnable() {
 						@Override
 						public void run() {
 				    		Toast.makeText(service.getApplicationContext(), "自动静音", Toast.LENGTH_SHORT).show();
 						}
 					});
-		    	else
+		    	}
+		    	else{
+					GlobalAudioManager.unmute(service);
 		    		service.handler.post(new Runnable() {
 						@Override
 						public void run() {
 				    		Toast.makeText(service.getApplicationContext(), "自动发声", Toast.LENGTH_SHORT).show();
 						}
 					});
+		    	}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

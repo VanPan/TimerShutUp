@@ -1,6 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
-        android:title="@string/menu_settings"
+    <item android:id="@+id/miAdd"
+        android:title="添加"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/miSave"
+        android:title="保存"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/miUnMute"
+        android:title="发声"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/miMute"
+        android:title="静音"
         android:orderInCategory="100"
         android:showAsAction="never" />
 </menu>
