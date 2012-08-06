@@ -30,7 +30,8 @@ public class TimeIntervalShutuper implements Runnable {
 			return;
 		while (true) {
 			try {
-				Thread.sleep(getSleepTime());
+				long sleepTime=getSleepTime();
+				Thread.sleep(sleepTime);
 		    	if(mci.isMute()){
 					GlobalAudioManager.mute(service);
 		    		service.handler.post(new Runnable() {
